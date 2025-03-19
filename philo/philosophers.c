@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 01:36:20 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 14:01:53 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/03/19 16:36:45 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,31 @@
 // this f
 void	sleep_own(size_t i, t_philo *philo, char action)
 {
+    time_t think;
+	pthread_mutex_lock(&philo->last_meal_lock);
+	think = (philo->time_die - (get_time_in_ms() - philo->phil[i].last_meal_time) - philo->time_eat) / 2;
+    pthread_mutex_unlock(&philo->last_meal_lock);
+    if (think < 0)
+        think = 0;
+    if (think < 0)
+        think = 1;
+    if (think > 600)
+        think = 200;
+    // if (new == false)
+    //     report(THOUGHTS, philo);
+
+
+
+	
 	if (action == 's')
+	{
+		time_log(philo,i,'s');
 		usleep(philo->phil[i].time_sleep * 1000);
-	if (action == 'e')
+	}
+	else if (action == 'e')
 		usleep(philo->phil[i].time_eat * 1000);
-	if (action == 's')
-		action = 's';
+	else if (action == 't')
+		usleep(think * 1000);
 }
 
 int	philosopher_one(t_philo *philo, size_t i)
@@ -38,9 +57,8 @@ int	philosopher_one(t_philo *philo, size_t i)
 }
 
 // calls routine tepending on number of args
-// Optional: Small delay for odd-numbered philosophers to avoid initial contention
 // Think first
-// Then try to eat (all philosophers should attempt to eat)
+// Then try to eat
 // Then sleep
 void	*philosopher_algo(void *arg)
 {
@@ -57,19 +75,34 @@ void	*philosopher_algo(void *arg)
 	while (is_alive(philosopher->parent, i) != EXIT_FAILURE)
 	{
 		think(i, philosopher->parent);
-		philosopher->last_meal_time = time_since_last_meal(philosopher->parent,
-				i);
-		if (philosopher->last_meal_time > philosopher->time_die)
-		{
-			// endtimes(i, philosopher->parent);
-			// return (NULL);
-			;
-		}
+		if (check_meal_time(philosopher, i) == EXIT_FAILURE)
+			return (NULL);
 		attend_to_eat(philosopher->parent, i);
-		send_to_sleep(i, philosopher->parent);
+		sleep_own(i, philosopher->parent, 's');
 		philosopher->parent->dinner_count++;
 	}
 	return (NULL);
+}
+
+// Initialize threads and values
+// join threads
+int	init_threads(t_philo *philos, int n_philos)
+{
+	int	i;
+
+	i = 0;
+	philos->n_philo = n_philos;
+	philos->time_passed = 0;
+	philos->start_time = get_time_in_ms();
+	if (init_mem_philo(philos, n_philos) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (init_mutexer(philos) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (init_philo(philos, n_philos) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (init_join_threads(philos, n_philos) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 //

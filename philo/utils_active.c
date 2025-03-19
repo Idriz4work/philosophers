@@ -6,23 +6,56 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:52 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 12:24:33 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:44:03 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-// number of the left neighbor of philosopher i,
-// N is added for the case when  i - 1 is negative
-size_t	left(size_t i, int n)
-{
-	return ((i - 1 + n) % n);
-}
 
-// number of the right neighbor of the philosopher i,
-size_t	right(size_t i, int n)
+// Improved check_meal_time function
+// int check_meal_time(t_attr *philosopher, size_t i)
+// {
+//     philosopher->last_meal_time = time_since_last_meal(philosopher->parent, i);
+//     if (philosopher->last_meal_time > philosopher->time_die)
+//     {
+//         pthread_mutex_lock(&philosopher->parent->dead_lock);
+//         philosopher->state = IS_DEAD;
+//         philosopher->parent->simulation_end = 1; // Flag to end simulation
+//         pthread_mutex_unlock(&philosopher->parent->dead_lock);
+        
+//         time_log(philosopher->parent, i, 'd');
+//         return (EXIT_FAILURE);
+//     }
+//     return (EXIT_SUCCESS);
+// }
+
+// // Improved is_alive function
+// int is_alive(t_philo *philo, size_t i)
+// {
+//     int result;
+
+//     result = EXIT_SUCCESS;
+//     pthread_mutex_lock(&philo->dead_lock);
+//     if (philo->phil[i].state == IS_DEAD || philo->simulation_end)
+//         result = EXIT_FAILURE;
+//     pthread_mutex_unlock(&philo->dead_lock);
+    
+//     return (result);
+// }
+
+// check if the time thought was lonegr than the time to die
+int	check_meal_time(t_attr *philosopher, size_t i)
 {
-	return ((i + 1) % n);
+	philosopher->last_meal_time = time_since_last_meal(philosopher->parent, i);
+	if (philosopher->last_meal_time > philosopher->time_die)
+	{
+		time_log(philosopher->parent,i,'d');
+		// endtimes(i, philosopher->parent);
+		// return (EXIT_FAILURE);
+		;
+	}
+	return (EXIT_SUCCESS);
 }
 
 //

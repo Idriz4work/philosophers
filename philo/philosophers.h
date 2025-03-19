@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 01:36:29 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 13:05:09 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:30:51 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #define IS_THINKING -14
 #define IS_DEAD -15
 #define IS_ALIVE -18
-#define HAS_FORKS -20
+#define IS_RUNNING -20
 
 // you dony need mutexes inside your attribtues, the mutexes needs
 // to be accesable for all therads therefore outside of them
@@ -65,6 +65,10 @@ typedef struct s_philosophers
 	pthread_mutex_t			exit_lock;
 	time_t					time_passed;
 	time_t					start_time;
+
+	int death_logged;
+	int simulation_end;
+	
 }							t_philo;
 
 //
@@ -76,8 +80,6 @@ int							input_parser(int argc, char **argv,
 
 // main philo
 void						*philosopher_algo(void *arg);
-size_t						left(size_t i, int n);
-size_t						right(size_t i, int n);
 
 // init
 void						time_log(t_philo *philo, size_t id, char action);
@@ -99,15 +101,13 @@ void						put_forks(size_t i, t_philo *philo);
 void						think(size_t i, t_philo *philo);
 void						eat(size_t i, t_philo *philo);
 void						sleep_own(size_t i, t_philo *philo, char action);
-void						send_to_sleep(size_t i, t_philo *philo);
-void						take_fork_just(size_t i, t_philo *philo);
-void						take_fork_unjust(size_t i, t_philo *philo);
 void						put_forks(size_t i, t_philo *philo);
 void						eat(size_t i, t_philo *philo);
 int							attend_to_eat(t_philo *philo, size_t i);
 // activity checkers
 int							is_alive(t_philo *philo, size_t i);
 int							check_dinner(t_philo *philosopher);
+int							check_meal_time(t_attr *philosopher, size_t i);
 
 // time functions
 time_t						get_time_in_ms(void);

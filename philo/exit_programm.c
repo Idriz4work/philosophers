@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/18 16:46:39 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 17:44:12 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:59:35 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	endtimes(size_t i, t_philo *philo)
 	return (EXIT_SUCCESS);
 }
 
-/ // Improved mutex_cleanup function
+// Improved mutex_cleanup function
 // void mutex_cleanup(t_philo *philo, size_t n_philo)
 // {
 //     static int cleaned_up = 0;

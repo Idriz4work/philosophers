@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 01:36:20 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 16:36:45 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/03/19 18:01:20 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,25 +15,23 @@
 // this f
 void	sleep_own(size_t i, t_philo *philo, char action)
 {
-    time_t think;
+	time_t	think;
+
 	pthread_mutex_lock(&philo->last_meal_lock);
-	think = (philo->time_die - (get_time_in_ms() - philo->phil[i].last_meal_time) - philo->time_eat) / 2;
-    pthread_mutex_unlock(&philo->last_meal_lock);
-    if (think < 0)
-        think = 0;
-    if (think < 0)
-        think = 1;
-    if (think > 600)
-        think = 200;
-    // if (new == false)
-    //     report(THOUGHTS, philo);
-
-
-
-	
+	think = (philo->time_die - (get_time_in_ms()
+				- philo->phil[i].last_meal_time) - philo->time_eat) / 2;
+	pthread_mutex_unlock(&philo->last_meal_lock);
+	if (think < 0)
+		think = 0;
+	if (think < 0)
+		think = 1;
+	if (think > 600)
+		think = 200;
+	// if (new == false)
+	//     report(THOUGHTS, philo);
 	if (action == 's')
 	{
-		time_log(philo,i,'s');
+		time_log(philo, i, 's');
 		usleep(philo->phil[i].time_sleep * 1000);
 	}
 	else if (action == 'e')
@@ -42,6 +40,7 @@ void	sleep_own(size_t i, t_philo *philo, char action)
 		usleep(think * 1000);
 }
 
+//
 int	philosopher_one(t_philo *philo, size_t i)
 {
 	while (1)
@@ -86,6 +85,8 @@ void	*philosopher_algo(void *arg)
 
 // Initialize threads and values
 // join threads
+// init the thread that will look all other thread (katil)
+// join that watcher thread
 int	init_threads(t_philo *philos, int n_philos)
 {
 	int	i;
@@ -101,6 +102,8 @@ int	init_threads(t_philo *philos, int n_philos)
 	if (init_philo(philos, n_philos) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	if (init_join_threads(philos, n_philos) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (init_katil(philos) == EXIT_FAILURE)
 		return (EXIT_FAILURE);
 	return (EXIT_SUCCESS);
 }

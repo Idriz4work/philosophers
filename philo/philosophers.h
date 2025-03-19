@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 01:36:29 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 17:30:51 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/03/19 17:58:50 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,14 @@ typedef struct s_philosophers
 	time_t					time_passed;
 	time_t					start_time;
 
-	int death_logged;
-	int simulation_end;
-	
+	int						death_logged;
+	int						simulation_end;
+
 }							t_philo;
+
+//*********************************************************************** */
+//** -------------------------------- FUNCTIONS ------------------------ */
+//** ********************************************************************/
 
 //
 // INput parsing
@@ -77,7 +81,7 @@ int							philo_parser(int n_philos, char **argv,
 								t_philo *philos, int argc);
 int							input_parser(int argc, char **argv,
 								t_philo *philos);
-
+int							init_katil(t_philo *philo);
 // main philo
 void						*philosopher_algo(void *arg);
 
@@ -105,6 +109,8 @@ void						put_forks(size_t i, t_philo *philo);
 void						eat(size_t i, t_philo *philo);
 int							attend_to_eat(t_philo *philo, size_t i);
 // activity checkers
+void						*monitor_philosophers(void *arg);
+
 int							is_alive(t_philo *philo, size_t i);
 int							check_dinner(t_philo *philosopher);
 int							check_meal_time(t_attr *philosopher, size_t i);

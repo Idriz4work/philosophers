@@ -4,7 +4,7 @@ CFLAGS = -g -pthread
 # -fsanitize=thread
 # valgrind --tool=drd
 
-SRC = philo/exit_programm.c philo/input_parser.c philo/utils_active.c philo/init_structs.c philo/time.c philo/activities.c philo/philosophers.c philo/utils.c
+SRC = philo/monitor.c philo/exit_programm.c philo/input_parser.c philo/utils_active.c philo/init_structs.c philo/time.c philo/activities.c philo/philosophers.c philo/utils.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)

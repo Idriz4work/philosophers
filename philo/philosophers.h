@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 01:36:29 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 17:58:50 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/04/04 18:20:20 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,16 @@
 #include <sys/time.h>
 // #include <time.h>
 
-#define IS_EATING -12
-#define IS_SLEEPING -13
 #define IS_THINKING -14
 #define IS_DEAD -15
 #define IS_ALIVE -18
-#define IS_RUNNING -20
+#define IS_OVER -20
 
 // you dony need mutexes inside your attribtues, the mutexes needs
 // to be accesable for all therads therefore outside of them
 typedef struct s_character
 {
+	int						log_permission;
 	size_t					number_p;
 	time_t					time_die;
 	time_t					time_eat;
@@ -49,6 +48,7 @@ typedef struct s_character
 // pthread_mutex_t	l_chop_block;
 typedef struct s_philosophers
 {
+	int						messenger_state;
 	t_attr					*phil;
 	size_t					n_philo;
 	time_t					time_die;
@@ -58,16 +58,17 @@ typedef struct s_philosophers
 	size_t					dinner_count;
 	size_t					dinner_number;
 	pthread_mutex_t			chop_sticks[250];
+	pthread_mutex_t			philo_lock[250];
 	pthread_mutex_t			dead_lock;
 	pthread_mutex_t			meal_lock;
-	pthread_mutex_t			last_meal_lock;
 	pthread_mutex_t			print_lock;
-	pthread_mutex_t			exit_lock;
+	// philo lock
 	time_t					time_passed;
 	time_t					start_time;
 
-	int						death_logged;
+	int						someone_died;
 	int						simulation_end;
+	pthread_t *katil;
 
 }							t_philo;
 
@@ -82,6 +83,7 @@ int							philo_parser(int n_philos, char **argv,
 int							input_parser(int argc, char **argv,
 								t_philo *philos);
 int							init_katil(t_philo *philo);
+void						check_messenger(t_philo *philo, size_t i);
 // main philo
 void						*philosopher_algo(void *arg);
 
@@ -110,10 +112,10 @@ void						eat(size_t i, t_philo *philo);
 int							attend_to_eat(t_philo *philo, size_t i);
 // activity checkers
 void						*monitor_philosophers(void *arg);
+void						starting_termination(t_philo *philosopher);
 
-int							is_alive(t_philo *philo, size_t i);
+int							time_check(t_philo *philo, size_t i);
 int							check_dinner(t_philo *philosopher);
-int							check_meal_time(t_attr *philosopher, size_t i);
 
 // time functions
 time_t						get_time_in_ms(void);

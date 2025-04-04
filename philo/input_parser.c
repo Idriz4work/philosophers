@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:40:26 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/17 13:39:04 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:52:20 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ int	philo_parser(int n_philos, char **argv, t_philo *philos, int argc)
 		if (ft_atoi(argv[4]) > 0)
 			philos->time_sleep = ft_atoi(argv[4]);
 		if (argc == 6 && ft_isdigit(argv[5]))
-			philos->dinner_count = ft_atoi(argv[5]);
+			philos->dinner_number = ft_atoi(argv[5]);
 		else
-			philos->dinner_count = -1;
+			philos->dinner_number = -1;
 		i++;
 	}
 	if (init_threads(philos, n_philos) != EXIT_SUCCESS)
@@ -54,6 +54,7 @@ int	input_parser(int argc, char **argv, t_philo *philos)
 		if (n_philos <= 0 || n_philos > 200)
 			return (EXIT_FAILURE);
 		philos->n_philo = n_philos;
+		philos->messenger_state = 0;
 		return (philo_parser(n_philos, argv, philos, argc));
 	}
 	return (EXIT_FAILURE);

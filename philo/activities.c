@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/11 14:52:58 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/03/19 16:38:39 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/04/04 12:27:56 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	attend_to_eat(t_philo *philo, size_t i)
 {
 	pthread_mutex_lock(&philo->chop_sticks[philo->phil[i].left_chop]);
 	pthread_mutex_lock(&philo->chop_sticks[philo->phil[i].right_chop]);
+	time_log(philo, i, 'f');
 	time_log(philo, i, 'f');
 	eat(i, philo);
 	pthread_mutex_unlock(&philo->chop_sticks[philo->phil[i].left_chop]);

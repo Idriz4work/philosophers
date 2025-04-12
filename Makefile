@@ -29,4 +29,4 @@ valgrind: $(NAME)
 helgrind: $(NAME)
 	valgrind --tool=helgrind --history-level=full ./$(NAME) $(ARGS)
 
-.PHONY: all clean fclean re valgrind helgrind
+.PHONY: all clean fclean re fre valgrind helgrind

@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/10 01:36:29 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/04/04 18:20:20 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:09:18 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ typedef struct s_character
 	size_t					dead;
 	size_t					dinner_count;
 	time_t					last_meal_time;
-	pthread_t				*threads;
+	size_t					thinking_start_time;
+	size_t					total_thinking_time;
+	size_t					sleeping_total;
+	pthread_t				thread;
 	struct s_philosophers	*parent;
 }							t_attr;
 
@@ -49,26 +52,23 @@ typedef struct s_character
 typedef struct s_philosophers
 {
 	int						messenger_state;
+	int						someone_died;
+	int						simulation_end;
 	t_attr					*phil;
 	size_t					n_philo;
 	time_t					time_die;
 	time_t					time_eat;
 	time_t					time_sleep;
-	time_t					time_think;
 	size_t					dinner_count;
 	size_t					dinner_number;
 	pthread_mutex_t			chop_sticks[250];
-	pthread_mutex_t			philo_lock[250];
 	pthread_mutex_t			dead_lock;
 	pthread_mutex_t			meal_lock;
 	pthread_mutex_t			print_lock;
 	// philo lock
 	time_t					time_passed;
 	time_t					start_time;
-
-	int						someone_died;
-	int						simulation_end;
-	pthread_t *katil;
+	pthread_t				*katil;
 
 }							t_philo;
 
@@ -85,6 +85,7 @@ int							input_parser(int argc, char **argv,
 int							init_katil(t_philo *philo);
 void						check_messenger(t_philo *philo, size_t i);
 // main philo
+void						*philosopher_one(t_philo *philo, size_t i);
 void						*philosopher_algo(void *arg);
 
 // init
@@ -103,13 +104,14 @@ int							ft_isdigit(char *ce);
 size_t						ft_strlen(const char *s);
 
 // ACTIVITIES
-void						put_forks(size_t i, t_philo *philo);
 void						think(size_t i, t_philo *philo);
 void						eat(size_t i, t_philo *philo);
-void						sleep_own(size_t i, t_philo *philo, char action);
+void						ft_sleep_own(size_t times);
 void						put_forks(size_t i, t_philo *philo);
 void						eat(size_t i, t_philo *philo);
 int							attend_to_eat(t_philo *philo, size_t i);
+void						sleep_routine(t_philo *philo, size_t i);
+
 // activity checkers
 void						*monitor_philosophers(void *arg);
 void						starting_termination(t_philo *philosopher);
@@ -118,6 +120,10 @@ int							time_check(t_philo *philo, size_t i);
 int							check_dinner(t_philo *philosopher);
 
 // time functions
+int							death_rules(t_philo *philo, size_t i);
+time_t						elapsed_time_monitor(t_philo *philo, size_t i,
+								time_t prev_t);
 time_t						get_time_in_ms(void);
 time_t						time_since_last_meal(t_philo *philo, size_t i);
 int							is_just(size_t i);
+time_t						get_time_since_start(t_philo *philo);

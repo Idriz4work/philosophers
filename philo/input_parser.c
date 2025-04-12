@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 17:40:26 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/04/04 12:52:20 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/04/12 18:04:25 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,9 @@ int	philo_parser(int n_philos, char **argv, t_philo *philos, int argc)
 		i++;
 	}
 	if (init_threads(philos, n_philos) != EXIT_SUCCESS)
+	{
 		return (EXIT_FAILURE);
+	}
 	return (EXIT_SUCCESS);
 }
 
@@ -52,7 +54,10 @@ int	input_parser(int argc, char **argv, t_philo *philos)
 	{
 		n_philos = ft_atoi(argv[1]);
 		if (n_philos <= 0 || n_philos > 200)
+		{
+			printf("MIN:1+/MAX:200. 200+ philosophers is not allowed\n");
 			return (EXIT_FAILURE);
+		}
 		philos->n_philo = n_philos;
 		philos->messenger_state = 0;
 		return (philo_parser(n_philos, argv, philos, argc));

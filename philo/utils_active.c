@@ -6,7 +6,7 @@
 /*   By: iatilla- <iatilla-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 13:23:52 by iatilla-          #+#    #+#             */
-/*   Updated: 2025/04/04 12:51:09 by iatilla-         ###   ########.fr       */
+/*   Updated: 2025/04/12 15:33:12 by iatilla-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,18 @@
 void	check_messenger(t_philo *philo, size_t i)
 {
 	long	current_starve_time;
+	long	time_left;
 
-	pthread_mutex_lock(&philo->print_lock);
 	current_starve_time = time_since_last_meal(philo, i);
-	if (philo->time_die - current_starve_time <= 10
-		&& philo->time_die - current_starve_time > 5
-		&& !philo->messenger_state)
+	time_left = philo->time_die - current_starve_time;
+	if (time_left <= 10 && time_left > 0 && !philo->messenger_state)
 	{
-		time_log(philo, i, 'M');
+		pthread_mutex_lock(&philo->print_lock);
+		printf("\033[1;33m%ld %zu will die in %ldms!\033[0m\n",
+			get_time_since_start(philo), i + 1, time_left);
 		philo->messenger_state = 1;
+		pthread_mutex_unlock(&philo->print_lock);
 	}
-	pthread_mutex_unlock(&philo->print_lock);
 }
 
 // Checks if the time to die is near before 10 seconds of starvation
